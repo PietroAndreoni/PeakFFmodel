@@ -1,0 +1,62 @@
+# Gams file
+*.log
+*.lxi
+*.lst
+*.~gm
+
+# Office file
+*.doc
+*.docx
+*.log
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+
+# Temporary
+*.tmp
+
+
+
+# Word temporary
+
+~$*.doc*
+
+
+
+# Excel temporary
+
+~$*.xls*
+
+
+
+# Excel Backup File
+
+*.xlk
+
+
+
+# PowerPoint temporary
+
+~$*.ppt*
+
+
+
+# Visio autosave temporary files
+
+*.~vsd*
+
+
+results\.gdx
+
+data_pop\.gdx
+
+*.BACKUP
+*.csv
+results_all.gdx
+Untitled_1.gms
+Untitled_2.gms
+
+*.dat
+
+*.cmd
