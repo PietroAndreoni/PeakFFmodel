@@ -19,6 +19,9 @@ be kept in the ground to meet various target and what influence the socio-econom
 projections have in meeting certain goals.
 Results in cumulative emissions are trasformed in atmospheric concentrations
 in order to confront them with the policy targets.
+Starting time is 2010.
+RCP2.6 scenario in SSP3 is infeasible, therefore it is rapresented as another baseline
+for coding reason
 $offText
 
 $onText
@@ -30,7 +33,7 @@ PROBLEMS E TODO
 $offText
 
 
-set        t     Time periods (5 years per period)                    /1*20/ ;
+set        t     Time periods (10 years per period)                    /1*10/;
 set        SSP   Population scenario                              /SSP1*SSP5/;
 set        RCP   Radiative forcing scenario                       /RCP26,BAU/;
 set        i     Fossil fuels                                  /coal,oil,gas/;
@@ -38,18 +41,26 @@ set        i     Fossil fuels                                  /coal,oil,gas/;
 
 scalar
 
-         tstep   Years per period                                        /5/;
+         tstep   Years per period                                        /10/;
 
 *multidimensional parameters
-parameters
+$include Datatables
 
-         POP(t,SSP)         Population
-         GDP(t,SSP,RCP)     Gross domestic product in 2005 US$ (PPP)
-         CIGDP(t,SSP,RCP)   Projected carbon intensity of GDP (total emission over GDP)
+parameters
          K(i)               Maximum recoverable resources by fossil source
-         EMFAC(i)           Emission factor by fossil source
+                                                                         / coal
+                                                                            oil
+                                                                            gas  /
+         EMFAC(i)           Emission factor by fossil source in
+                                                                          / coal 18.1082399
+                                                                            oil  35.7285436
+                                                                            gas  25.79920907 /
          r(i)               Maximum growth rate of production by fossil source
-         tar(RCP)           Concentration target by policy scenario ;
+                                                                          / coal 0.03
+                                                                            oil  0.03
+                                                                            gas  0.03 /
+         tar(RCP)           Cumulative emission target by policy scenario /BAU
+                                                                           RCP26/;
 
 *initial values of variables
 parameters
