@@ -3,30 +3,33 @@
 [RP:SOLVE_REGIONS]
 1=
 
+[RP:UNTITLED_1]
+1=
+
+[RP:DATATABLES]
+1=
+
+[RP:PEAKOIL]
+1=
+
 [RP:POPTABLES]
 1=
 
 [RP:DICE2013_NS]
 1=
 
-[RP:UNTITLED_1]
-1=
-
-[RP:PEAKOIL]
-1=
-
 [MRUFILES]
-1=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
-2=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
-3=C:\Users\pietr\Desktop\Oil&gas\Untitled_1.gms
-4=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\poptables.gms
+1=C:\Users\pietr\Documents\ProgettoEMS\DICE2013_NS.gms
+2=C:\Users\pietr\Documents\ProgettoEMS\poptables.gms
+3=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
+4=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
+5=C:\Users\pietr\Desktop\Oil&gas\Untitled_1.gms
+6=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\poptables.gms
 
 [OPENWINDOW_1]
-FILE0=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
-FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Untitled_1.gms
-FILE2=C:\Users\pietr\Documents\ProgettoEMS\DICE2013_NS.gms
-FILE3=C:\Users\pietr\Documents\ProgettoEMS\poptables.gms
-FILE4=C:\Users\pietr\Documents\ProgettoEMS\poptables.gms
+FILE0=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.gms
+FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
+FILE2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
 MAXIM=1
 TOP=1
 LEFT=0
