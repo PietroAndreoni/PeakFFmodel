@@ -25,7 +25,7 @@ table       GDP(t,SSP,RCP)     Gross domestic product in bilion 2005 US$ (PPP)
 2090        524875.813        524875.813        465846.5        454381.4        247081        247081        330347.615        330199.371        882300        833600
 2100        565389.625        565389.625        539332.4        524725.4        270265        270265        352091.462        352120.413        1031000       975200;
 
-table       CIGDP(t,SSP,RCP)   Projected carbon intensity of GDP (total emission over GDP) in MtC02 over bilion 2005 US$
+table       FFIGDP(t,SSP,RCP)   Projected carbon intensity of GDP (total emission over GDP) in MtC02 over bilion 2005 US$
 
             SSP1.BAU           SSP1.RCP26         SSP2.BAU           SSP2.RCP26         SSP3.BAU           SSP3.RCP26         SSP4.BAU           SSP4.RCP26         SSP5.BAU           SSP5.RCP26
 2010        0.467142918        0.467142956        0.490652795        0.49072733         0.503570079        0.503570079        0.487726927        0.487726744        0.476542844        0.476542844
@@ -38,3 +38,4 @@ table       CIGDP(t,SSP,RCP)   Projected carbon intensity of GDP (total emission
 2080        0.074318584        -0.000998392       0.185867785        0.000550373        0.320764214        0.320764214        0.160781311        -0.044060367       0.174993249        -0.017659605
 2090        0.058363064        -0.011435281       0.174471523        -0.00582391        0.313954723        0.313954723        0.140988508        -0.060759765       0.148362235        -0.020393474
 2100        0.047841351        -0.009648991       0.159763752        -0.00871042        0.305473681        0.305473681        0.12590286         -0.078749418       0.123763337        -0.01966776;
+

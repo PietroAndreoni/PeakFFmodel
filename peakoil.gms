@@ -88,7 +88,14 @@ parameters
          P0(i)      Production at time t0 of fossil fuel i in relative terms
                                                                          / coal 0.3431
                                                                            oil  0.3855
-                                                                           gas  0.2712  /;
+                                                                           gas  0.2712  /
+         Np0(i)     Cumulative production at time t0
+                                                                         / coal 1000000
+                                                                           oil  1000000
+                                                                           gas  1000000 / ;
+
+parameter
+         D(t)       Demand of fossil fuels through scenarios;
 
 scalars
          CUMEM0     Cumulative emission at period t0                     / 133317.888 /
@@ -100,26 +107,21 @@ scalar
 
 *support parameters for scenario looping and results saving
 parameter
-         GDP_aux(t), CIGDP_aux(t), P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP);
+         GDP_aux(t), FFIGDP_aux(t), P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP);
 
 *random initialization of support parameters
 GDP_aux(t) = 0;
-CIGDP_aux(t) = 0;
+FFIGDP_aux(t) = 0;
 P_res(t,i,SSP,RCP) = 0;
 EM_res(t,SSP,RCP) = 0;
 
 
 nonnegative variables
 
-         D(t)       Demand for fossil fuels energy
          PTOT(t)    Total production of all fossil fuels (MWh)
          Np(t,i)    Cumulative production of fossil fuel I
-         FFI(t)     Fossil fuel intensity of GDP in TWh over GDP
-         EM(t)      Carbon emissions ;
-
-variables
-         P(t,i)     Production of fossil fuel i
-         CIFF(t)    Carbon intensity of fossil fuel energy ;
+         EM(t)      Carbon emissions
+         P(t,i)     Production of fossil fuel i          ;
 
 
 variable
@@ -127,33 +129,25 @@ variable
 
 equations
 
-         DEQ             Demand equation
          PEQ             Production equation
-         PGRRATEEQ       Maximum growth rate costraint for production
+*         PGRRATEEQ       Maximum growth rate costraint for production
          SPEQEQ          Supply and demand equilibrium equation
          CUMPEQ          Cumulative production equation
          PCOSTR          Geometrical progression constraint on avaliable resources
          EMEQ            Emission equations
-         CIFFEQ          Carbon intensity of fossil fuels
-         FFIEQ           Fossil fuel intensity equation
          CUMEMEQ         Cumulative emission equations ;
 
 
-deq(t)..                                         D(t)       =E=   FFI(t) * GDP_aux(t);
 peq(t)..                                         PTOT(t)    =E=   sum(i,P(t,i));
-pgrrateeq(t,i)..                                 P(t+1,i)   =G=   maxfs*P(t,i);
+*pgrrateeq(t,i)$(D(t+1) ge maxfs*D(t))..          P(t+1,i)   =G=   maxfs*P(t,i);
 speqeq(t)..                                      PTOT(t)    =G=   D(t);
 cumpeq(t,i)..                                    Np(t+1,i)  =E=   Np(t,i) + P(t,i);
 pcostr(t,i)..                                    P(t,i)     =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) );
 emeq(t)..                                        EM(t)      =E=   sum(i,P(t,i) * EMFAC(i));
-ciffeq(t)..                                      CIFF(t)    =E=   EM(t) / PTOT(t);
-ffieq(t)..                                       FFI(t)     =E=   CIGDP_aux(t) / CIFF(t);
 CUMEMEQ..                                        CUMEM      =E=   CUMEM0 + sum(t,EM(t));
 
 
 *set boundaries for stability
-PTOT.lo(t) = 1;
-CIFF.lo(t) = .001;
 
 
 model peakoil /all/;
@@ -162,15 +156,13 @@ model peakoil /all/;
 *running model through scenarios
 loop ( (SSP,RCP),
         GDP_aux(t)   = GDP(t,SSP,RCP);
-        CIGDP_aux(t) = CIGDP(t,SSP,RCP);
+        FFIGDP_aux(t) = FFIGDP(t,SSP,RCP);
+        D(t) = 0;
+        D(t) = ( FFIGDP_aux(t) * GDP_aux(t) )$(FFIGDP_aux(t) ge 0);
 
 *set initial values
-        FFI.fx(tfirst) = CIGDP_aux(tfirst) / sum(i, EMFAC(i)*P0(i));
-        D.fx(tfirst) = FFI.l(tfirst)*GDP_aux(tfirst);
-        P.FX(tfirst,i) = P0(i)*D.l(tfirst);
-
-display GDP_aux,FFI.l,D.l,P.l,PTOT.l;
-
+        P.fx(tfirst,i) = P0(i)*D(tfirst);
+        Np.fx(tfirst,i) = Np0(i);
 
 options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
 
