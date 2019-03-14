@@ -60,31 +60,35 @@ set        RCP   Radiative forcing scenario                       /BAU,RCP26/;
 
 set        i     Fossil fuels                                  /coal,oil,gas/;
 
-scalar
-         tstep   Years per period                                        /10/;
+set        tfirst(t);
 
+scalar     tstep   Years per period                                        /10/;
+
+
+tfirst(t) = yes$(t.val eq 2010);
 *multidimensional parameters
 $include Datatables
 
 parameters
          K(i)               Maximum recoverable resources by fossil source
-                                                                         / coal 1000000000
-                                                                            oil 1000000000
-                                                                            gas 1000000000 /
+                                                                         / coal 10000000000000000
+                                                                            oil 10000000000000000
+                                                                            gas 10000000000000000 /
          EMFAC(i)           Emission factor by fossil source in MtC02 over TWh
                                                                           / coal 18.1082399
                                                                             oil  35.7285436
                                                                             gas  25.79920907 /
          r(i)               Maximum growth rate of production by fossil source
-                                                                          / coal 0.03
-                                                                            oil  0.03
-                                                                            gas  0.03 / ;
+                                                                          / coal 1
+                                                                            oil  1
+                                                                            gas  1 / ;
 *initial values for the variables
 
 parameters
-         P0(i)      Production at time t0 of fossil fuel i               / coal 42282.4673
-                                                                           oil  47513.45791
-                                                                           gas  33427.49678  /;
+         P0(i)      Production at time t0 of fossil fuel i in relative terms
+                                                                         / coal 0.3431
+                                                                           oil  0.3855
+                                                                           gas  0.2712  /;
 
 scalars
          CUMEM0     Cumulative emission at period t0                     / 133317.888 /
@@ -108,12 +112,15 @@ EM_res(t,SSP,RCP) = 0;
 nonnegative variables
 
          D(t)       Demand for fossil fuels energy
-         P(t,i)     Production of fossil fuel i
          PTOT(t)    Total production of all fossil fuels (MWh)
          Np(t,i)    Cumulative production of fossil fuel I
-         CIFF(t)    Carbon intensity of fossil fuel energy
          FFI(t)     Fossil fuel intensity of GDP in TWh over GDP
          EM(t)      Carbon emissions ;
+
+variables
+         P(t,i)     Production of fossil fuel i
+         CIFF(t)    Carbon intensity of fossil fuel energy ;
+
 
 variable
          CUMEM      Cumulative emissions in 2100. Objective variable ;
@@ -135,31 +142,37 @@ equations
 deq(t)..                                         D(t)       =E=   FFI(t) * GDP_aux(t);
 peq(t)..                                         PTOT(t)    =E=   sum(i,P(t,i));
 pgrrateeq(t,i)..                                 P(t+1,i)   =G=   maxfs*P(t,i);
-speqeq(t)..                                      D(t)       =L=   PTOT(t);
+speqeq(t)..                                      PTOT(t)    =G=   D(t);
 cumpeq(t,i)..                                    Np(t+1,i)  =E=   Np(t,i) + P(t,i);
 pcostr(t,i)..                                    P(t,i)     =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) );
 emeq(t)..                                        EM(t)      =E=   sum(i,P(t,i) * EMFAC(i));
 ciffeq(t)..                                      CIFF(t)    =E=   EM(t) / PTOT(t);
-ffieq(t)..                                       FFI(t)     =E=   CIFF(t) * CIGDP_aux(t);
+ffieq(t)..                                       FFI(t)     =E=   CIGDP_aux(t) / CIFF(t);
 CUMEMEQ..                                        CUMEM      =E=   CUMEM0 + sum(t,EM(t));
 
-*set initial values
-P.FX("2010",i) = P0(i);
-Np.FX("2010",i) = P0(i);
-PTOT.FX("2010") = sum(i,P.l("2010",i));
-D.FX("2010") = PTOT.l("2010");
 
 *set boundaries for stability
 PTOT.lo(t) = 1;
+CIFF.lo(t) = .001;
 
 
 model peakoil /all/;
 
-loop ( (SSP,RCP),
-         GDP_aux(t)   = GDP(t,SSP,RCP);
-         CIGDP_aux(t) = CIGDP(t,SSP,RCP);
 
-solve peakoil minimizing CUMEM using nlp;
+*running model through scenarios
+loop ( (SSP,RCP),
+        GDP_aux(t)   = GDP(t,SSP,RCP);
+        CIGDP_aux(t) = CIGDP(t,SSP,RCP);
+
+*set initial values
+        FFI.fx(tfirst) = CIGDP_aux(tfirst) / sum(i, EMFAC(i)*P0(i));
+        D.fx(tfirst) = FFI.l(tfirst)*GDP_aux(tfirst);
+        P.FX(tfirst,i) = P0(i)*D.l(tfirst);
+
+display GDP_aux,FFI.l,D.l,P.l,PTOT.l;
+
+
+options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
 
          P_res(t,i,SSP,RCP) = P.l(t,i);
          EM_res(t,SSP,RCP) = EM.l(t);

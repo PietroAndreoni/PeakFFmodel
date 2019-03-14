@@ -6,32 +6,38 @@
 [RP:UNTITLED_1]
 1=
 
+[RP:POPTABLES]
+1=
+
+[RP:DUMMY (1)]
+1=
+
+[RP:DICE2013_NS]
+1=
+
 [RP:DATATABLES]
 1=
 
 [RP:PEAKOIL]
 1=
 
-[RP:POPTABLES]
-1=
-
-[RP:DICE2013_NS]
-1=
-
 [MRUFILES]
-1=C:\Users\pietr\Documents\ProgettoEMS\DICE2013_NS.gms
-2=C:\Users\pietr\Documents\ProgettoEMS\poptables.gms
-3=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
-4=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
+1=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
+2=C:\Users\pietr\Documents\ProgettoEMS\DICE2013_NS.gms
+3=C:\Users\pietr\Documents\ProgettoEMS\poptables.gms
+4=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
 5=C:\Users\pietr\Desktop\Oil&gas\Untitled_1.gms
 6=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\poptables.gms
 
 [OPENWINDOW_1]
-FILE0=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.gms
-FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
-FILE2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
-MAXIM=1
+FILE0=C:\Users\pietr\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\TempState\Downloads\Dummy (1).gms
+FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.gms
+FILE2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.lst
+FILE3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
+FILE4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.lst
+FILE5=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
+MAXIM=0
 TOP=1
 LEFT=0
 HEIGHT=756
-WIDTH=648
+WIDTH=1033
