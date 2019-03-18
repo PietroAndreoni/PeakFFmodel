@@ -1,8 +1,5 @@
 [PROJECT]
 
-[RP:SOLVE_REGIONS]
-1=
-
 [RP:UNTITLED_1]
 1=
 
@@ -12,8 +9,317 @@
 [RP:DUMMY (1)]
 1=
 
+[RP:SOLVE_REGIONS]
+1=
+
 [RP:DICE2013_NS]
 1=
+
+[GDXDISP: CUMEM Var 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: i Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: K Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: maxfs Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+SqTrail0=0
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: Np Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: Np0 Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: P Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: P_res Par 4]
+PlaneDim=0
+RowDim=4
+Squeeze=1
+SqTrail0=0
+Order=1,2,3,4
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: P0 Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PCOSTR Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PEQ Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PGRRATEEQ Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: POP Par 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PTOT Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: r Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: RCP Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: SPEQEQ Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: SSP Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: t Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: tar Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+SqTrail0=0
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: tfirst Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: tstep Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+SqTrail0=0
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: GDP_aux Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: GDP Par 3]
+PlaneDim=0
+RowDim=3
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: FFIGDP_aux Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: FFIGDP Par 3]
+PlaneDim=0
+RowDim=3
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: EMFAC Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: EMEQ Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: EM_res Par 3]
+PlaneDim=0
+RowDim=3
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: EM Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: D Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: CUMPEQ Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: CUMEMEQ Equ 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: CUMEM0 Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+SqTrail0=0
+Order=
+Decim=7
+PlaneRownr=-1
 
 [RP:DATATABLES]
 1=
@@ -22,20 +328,21 @@
 1=
 
 [MRUFILES]
-1=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
+1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.log
 2=C:\Users\pietr\Documents\ProgettoEMS\DICE2013_NS.gms
 3=C:\Users\pietr\Documents\ProgettoEMS\poptables.gms
-4=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
-5=C:\Users\pietr\Desktop\Oil&gas\Untitled_1.gms
-6=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\poptables.gms
+4=C:\Users\pietr\Desktop\Oil&gas\Untitled_1.gms
+5=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\poptables.gms
 
 [OPENWINDOW_1]
-FILE0=C:\Users\pietr\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\TempState\Downloads\Dummy (1).gms
-FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.gms
-FILE2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.lst
-FILE3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
-FILE4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.lst
-FILE5=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
+FILE0=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.gms
+FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.lst
+FILE2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
+FILE3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.lst
+FILE4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\results.gdx
+FILE5=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
+FILE6=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
+FILE7=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
 MAXIM=0
 TOP=1
 LEFT=0

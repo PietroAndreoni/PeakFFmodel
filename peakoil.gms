@@ -39,7 +39,7 @@ PROBLEMS E TODO
 - Add a small climate model to translate cumulative emissions as concentrations
 - Hubbert geometric model does apply to coal?
 - make a confrontation between historical production and theoretical Hubbert maximum
-production to see if different fossil fuels are or are not demand driven
+production to see if different fossil fuels are or not demand driven
 $offText
 
 
@@ -66,40 +66,41 @@ scalar     tstep   Years per period                                        /10/;
 
 
 tfirst(t) = yes$(t.val eq 2010);
+
 *multidimensional parameters
 $include Datatables
 
 parameters
          K(i)               Maximum recoverable resources by fossil source
-                                                                         / coal 10000000000000000
-                                                                            oil 10000000000000000
-                                                                            gas 10000000000000000 /
+                                                                         / coal 10000000000000000000000000000
+                                                                            oil 10000000000000000000000000000
+                                                                            gas 10000000000000000000000000000 /
          EMFAC(i)           Emission factor by fossil source in MtC02 over TWh
-                                                                          / coal 18.1082399
-                                                                            oil  35.7285436
-                                                                            gas  25.79920907 /
+                                                                          / coal 35.7285436
+                                                                            oil  25.7992090
+                                                                            gas  18.1082399  /
          r(i)               Maximum growth rate of production by fossil source
-                                                                          / coal 1
-                                                                            oil  1
-                                                                            gas  1 / ;
+                                                                          / coal 0.03
+                                                                            oil  0.03
+                                                                            gas  0.03 / ;
 *initial values for the variables
 
 parameters
          P0(i)      Production at time t0 of fossil fuel i in relative terms
-                                                                         / coal 0.3431
-                                                                           oil  0.3855
-                                                                           gas  0.2712  /
-         Np0(i)     Cumulative production at time t0
-                                                                         / coal 1000000
-                                                                           oil  1000000
-                                                                           gas  1000000 / ;
+                                                                         / coal 0.34
+                                                                           oil  0.39
+                                                                           gas  0.27  /
+         Np0(i)     Cumulative production at time t0 (from 1960)
+                                                                         / coal 1171358.577
+                                                                           oil  1652597.944
+                                                                           gas  882942.0745 / ;
 
 parameter
          D(t)       Demand of fossil fuels through scenarios;
 
 scalars
-         CUMEM0     Cumulative emission at period t0                     / 133317.888 /
-         maxfs      Maximum fuel switching velocity in a period          / 0.8 /;
+         CUMEM0     Cumulative emission at period t0 (from 1960)         / 991306.0139 /
+         maxfs      Maximum fuel switching velocity in a period          / 0.5 /;
 
 *targets and parameters for confrontations
 scalar
@@ -107,21 +108,18 @@ scalar
 
 *support parameters for scenario looping and results saving
 parameter
-         GDP_aux(t), FFIGDP_aux(t), P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP);
+         P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP);
 
 *random initialization of support parameters
-GDP_aux(t) = 0;
-FFIGDP_aux(t) = 0;
 P_res(t,i,SSP,RCP) = 0;
 EM_res(t,SSP,RCP) = 0;
 
 
 nonnegative variables
 
-         PTOT(t)    Total production of all fossil fuels (MWh)
          Np(t,i)    Cumulative production of fossil fuel I
          EM(t)      Carbon emissions
-         P(t,i)     Production of fossil fuel i          ;
+         P(t,i)     Production of fossil fuel i (ratio) ;
 
 
 variable
@@ -130,24 +128,24 @@ variable
 equations
 
          PEQ             Production equation
-*         PGRRATEEQ       Maximum growth rate costraint for production
-         SPEQEQ          Supply and demand equilibrium equation
+         PGRRATEEQ       Maximum growth rate costraint for production
          CUMPEQ          Cumulative production equation
          PCOSTR          Geometrical progression constraint on avaliable resources
          EMEQ            Emission equations
          CUMEMEQ         Cumulative emission equations ;
 
 
-peq(t)..                                         PTOT(t)    =E=   sum(i,P(t,i));
-*pgrrateeq(t,i)$(D(t+1) ge maxfs*D(t))..          P(t+1,i)   =G=   maxfs*P(t,i);
-speqeq(t)..                                      PTOT(t)    =G=   D(t);
-cumpeq(t,i)..                                    Np(t+1,i)  =E=   Np(t,i) + P(t,i);
-pcostr(t,i)..                                    P(t,i)     =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) );
-emeq(t)..                                        EM(t)      =E=   sum(i,P(t,i) * EMFAC(i));
-CUMEMEQ..                                        CUMEM      =E=   CUMEM0 + sum(t,EM(t));
+peq(t)$(D(t) gt 0)..                             sum(i,P(t,i)) =E=   1;
+pgrrateeq(t+1,i)$(D(t+1) ge maxfs*D(t))..        P(t+1,i)      =G=   maxfs*P(t,i);
+cumpeq(t+1,i)..                                  Np(t+1,i)     =E=   Np(t,i) + D(t)*P(t,i);
+pcostr(t,i)..                                    D(t)*P(t,i)   =L=   ( r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) ) ) ;
+emeq(t)..                                        EM(t)         =E=   D(t) * sum(i,P(t,i) * EMFAC(i));
+CUMEMEQ..                                        CUMEM         =E=   CUMEM0 + sum(t,EM(t));
 
 
 *set boundaries for stability
+P.lo(t,i)=0;
+P.up(t,i)=1;
 
 
 model peakoil /all/;
@@ -155,13 +153,12 @@ model peakoil /all/;
 
 *running model through scenarios
 loop ( (SSP,RCP),
-        GDP_aux(t)   = GDP(t,SSP,RCP);
-        FFIGDP_aux(t) = FFIGDP(t,SSP,RCP);
+
         D(t) = 0;
-        D(t) = ( FFIGDP_aux(t) * GDP_aux(t) )$(FFIGDP_aux(t) ge 0);
+        D(t) = ( FFIGDP(t,SSP,RCP) * GDP(t,SSP,RCP) )$( FFIGDP(t,SSP,RCP) gt 0);
 
 *set initial values
-        P.fx(tfirst,i) = P0(i)*D(tfirst);
+        P.fx(tfirst,i) = P0(i);
         Np.fx(tfirst,i) = Np0(i);
 
 options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
