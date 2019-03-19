@@ -120,7 +120,7 @@ parameter
          D(t)       Demand of fossil fuels through scenarios;
 
 scalars
-         CUMEM0     Cumulative emission at period t0 (from 1960) relativo to total demand at to
+         CUMEM0     Cumulative emission at period t0 (from 1960) relative to total demand at t0
                                                                         / 8.044785625 /;
 
 *targets and parameters for confrontations
@@ -158,7 +158,7 @@ equations
 
 
 peq(t)$(D(t) gt 0)..                                             sum(i,P(t,i)) =E=   1;
-pgrrateeq(t+1,i)$(D(t) gt 0)..                                   P(t+1,i)      =G=   maxfs(i)*P(t,i);
+pgrrateeq(t+1,i)$(D(t+1) gt 0)..                                 P(t+1,i)      =G=   maxfs(i)*P(t,i);
 cumpeq(t+1,i)..                                                  Np(t+1,i)     =E=   Np(t,i) + D(t)*P(t,i);
 pcostr(t,i)$(ord(t) gt 1)..                                      D(t)*P(t,i)   =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) );
 emeq(t)..                                                        EM(t)         =E=   sum(i,P(t,i) * EMFAC(i));
@@ -186,8 +186,8 @@ loop ( (SSP,RCP),
 *set initial values
          P.fx(tfirst,i) = P0(i);
          Np.fx(tfirst,i) = Np0(i);
-*"suggest" production to zero if demand if zero to avoid "free production" at zero demand
-*         P.l(t,i)$(D(t) eq 0) =0;
+*"suggest" production equal to zero if demand is zero to avoid "free production" at zero demand
+         P.l(t,i)$(D(t) eq 0) =0;
 *Force dummy at zero in first periods
 *         P.fx(t,"dummy")$(ord(t) le 5) = 0;
 
