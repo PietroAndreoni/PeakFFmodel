@@ -48,6 +48,7 @@ to remain meaningful.
 - in the paper: search dependence of oil consumptio vs population and vs GDP to show
 that the second is stronger
 - GAMS GENERAL KNOWLEDGE: is referring the equation to (t+1) the same as (ord(t) le card(t)-1)?
+- Think about first condition in pggrateeq
 $offText
 
 
@@ -119,7 +120,8 @@ parameter
          D(t)       Demand of fossil fuels through scenarios;
 
 scalars
-         CUMEM0     Cumulative emission at period t0 (from 1960)         / 991306.0139 /;
+         CUMEM0     Cumulative emission at period t0 (from 1960) relativo to total demand at to
+                                                                        / 8.044785625 /;
 
 *targets and parameters for confrontations
 scalar
@@ -139,8 +141,7 @@ nonnegative variables
 
          Np(t,i)    Cumulative production of fossil fuel I
          EM(t)      Carbon emissions
-         P(t,i)     Production of fossil fuel i (ratio)
-         DUMMY      Dummy variable to avoid infeasibility if demand cannot be met;
+         P(t,i)     Production of fossil fuel i (ratio);
 
 
 variable
@@ -156,11 +157,11 @@ equations
          CUMEMEQ         Cumulative emission equations ;
 
 
-peq(t)..                                                         sum(i,P(t,i)) =E=   1;
-pgrrateeq(t+1,i)$(D(t+1) ge maxfs(i)*D(t) and D(t+1) gt 0)..     P(t+1,i)      =G=   maxfs(i)*P(t,i);
+peq(t)$(D(t) gt 0)..                                             sum(i,P(t,i)) =E=   1;
+pgrrateeq(t+1,i)$(D(t) gt 0)..                                   P(t+1,i)      =G=   maxfs(i)*P(t,i);
 cumpeq(t+1,i)..                                                  Np(t+1,i)     =E=   Np(t,i) + D(t)*P(t,i);
 pcostr(t,i)$(ord(t) gt 1)..                                      D(t)*P(t,i)   =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) );
-emeq(t)..                                                        EM(t)         =E=   D(t) * sum(i,P(t,i) * EMFAC(i));
+emeq(t)..                                                        EM(t)         =E=   sum(i,P(t,i) * EMFAC(i));
 CUMEMEQ..                                                        CUMEM         =E=   CUMEM0 + sum(t,EM(t));
 
 
@@ -185,6 +186,11 @@ loop ( (SSP,RCP),
 *set initial values
          P.fx(tfirst,i) = P0(i);
          Np.fx(tfirst,i) = Np0(i);
+*"suggest" production to zero if demand if zero to avoid "free production" at zero demand
+*         P.l(t,i)$(D(t) eq 0) =0;
+*Force dummy at zero in first periods
+*         P.fx(t,"dummy")$(ord(t) le 5) = 0;
+
 
 options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
 
@@ -200,7 +206,7 @@ loop ( (t,SSP,RCP),
 
          if ( P_res(t,"dummy",SSP,RCP) gt 0,
 
-                 EM_res(t,SSP,RCP) = EM_res(t,SSP,RCP) - EMFAC("dummy")*P_res(t,"dummy",SSP,RCP)*D_res(t,SSP,RCP);
+                 EM_res(t,SSP,RCP) = EM_res(t,SSP,RCP) - EMFAC("dummy")*P_res(t,"dummy",SSP,RCP);
 
              );
 
