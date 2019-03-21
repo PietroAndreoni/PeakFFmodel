@@ -129,12 +129,14 @@ scalar
 
 *support parameters for scenario looping and results saving
 parameter
-         P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP),D_res(t,SSP,RCP);
+         P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP), D_res(t,SSP,RCP), GREM_res(t,SSP,RCP), Np_res(t,i,SSP,RCP);
 
 *initialization of support parameters
 P_res(t,i,SSP,RCP) = 0;
 EM_res(t,SSP,RCP) = 0;
 D_res(t,SSP,RCP) = 0;
+GREM_res(t,SSP,RCP) = 0;
+Np_res(t,i,SSP,RCP) = 0;
 
 
 nonnegative variables
@@ -197,7 +199,7 @@ options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
          P_res(t,i,SSP,RCP) = P.l(t,i);
          EM_res(t,SSP,RCP) = EM.l(t);
          D_res(t,SSP,RCP) = D(t);
-
+         Np_res(t,i,SSP,RCP) = Np.l(t,i); 
       );
 
 *post processing for correct results if dummy is actively used
@@ -210,8 +212,10 @@ loop ( (t,SSP,RCP),
 
              );
 
+         Np_res(t,"dummy",SSP,RCP) = Np_res(t,"dummy",SSP,RCP)-Np0("dummy");
+         GREM_res(t,SSP,RCP) =  EM_res(t,SSP,RCP)*D_res(t,SSP,RCP);
       );
 
 execute_unload "results.gdx";
-execute_unload "resultsshort.gdx",P_res,EM_res,D_res;
+execute_unload "resultsshort.gdx",P_res,EM_res,D_res,Np_res,GREM_res;
 execute '=gdx2xls resultsshort.gdx';

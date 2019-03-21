@@ -4,5 +4,12 @@
 This means that the model is infeasible without dummy support with the choosen maximum rate of production r(i): are they too low? (maybe confront them with current data to check r calculated values). 
 To give an idea: model becomes feasibile only at r(i) around .1, when maximum rate from data to 73 to 2014 are almost half of that value for the three fossil fuels.
 The other way around, in some bau scenarios, in 2050 dummy account for almost half of the total demand. That means a huge shortage of FF resources.
+
 - About production and dummy: there's still a problem i tried to solve making EM an intensive variable (why doesen't it work?), ie production is more than zero when demand is zero, ie "free production". That's even stranger because when the sum(p(i)) = 1 costraint is released the overall value goes above one instead of decreasing [at tmax, maybe is due to boundary behaviour], and in some SSP it seems to work while SSP1 keep the constraint even if demand is equal to zero during the last tree decades.
-The problem can be overcome with post calculation (simply not accounting for production if demand is zero), but the whole thing is very frustrating
+The problem can be overcome with post calculation (simply not accounting for production if demand is zero), but the whole thing is very frustrating. SOLVED with suggesting level of production at 0 if demand is 0
+
+- PROBLEM: the model does not account for tstep. Simply adding it in Np equation (ie Np(t+1) - N(t) = D(t)*P(t)*tstep) gives absurd results, however should be correct. 
+Solution 1: discretize at tstep = 1 
+Solution 2: ?
+
+- maybe Pcostr condition should be related to gross demand instead of production mix. Think well about the conditions 
