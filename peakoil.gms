@@ -80,15 +80,21 @@ scalar     tstep   Years per period                                        /10/;
 
 parameters
          K(i)               Maximum recoverable resources by fossil source
+                                                                          / coal   8079577
+                                                                            oil    4432166
+                                                                            gas    3292351
+                                                                            dummy  10000000000 /
+
+$ontext
                                                                           / coal   6908219.983
                                                                             oil    2779569.993
                                                                             gas    2407409.994
                                                                             dummy  10000000000 /
-
+$offtext
          EMFAC(i)           Emission factor by fossil source in MtC02 over TWh
-                                                                          / coal  35.7285436
-                                                                            oil   25.7992090
-                                                                            gas   18.1082399
+                                                                          / coal  35.728
+                                                                            oil   25.799
+                                                                            gas   18.108
                                                                             dummy 50  /
 
          r(i)               Maximum growth rate of production by fossil source
@@ -98,10 +104,10 @@ parameters
                                                                             dummy 1 /
 
          maxfs(i)           Maximum fuel switching velocity in a period
-                                                                          / coal  0.5
+                                                                          / coal  0.1
                                                                             oil   0.5
-                                                                            gas   0.5
-                                                                            dummy 0 / ;
+                                                                            gas   0.3
+                                                                            dummy 1 / ;
 *initial values for the variables
 
 parameters
@@ -121,7 +127,7 @@ parameter
 
 scalars
          CUMEM0     Cumulative emission at period t0 (from 1960) relative to total demand at t0
-                                                                        / 8.044785625 /;
+                                                                        / 991306 /;
 
 *targets and parameters for confrontations
 scalar
@@ -129,7 +135,7 @@ scalar
 
 *support parameters for scenario looping and results saving
 parameter
-         P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP), D_res(t,SSP,RCP), GREM_res(t,SSP,RCP), Np_res(t,i,SSP,RCP);
+         P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP), D_res(t,SSP,RCP), PD_res(t,i,SSP,RCP), GREM_res(t,SSP,RCP), Np_res(t,i,SSP,RCP);
 
 *initialization of support parameters
 P_res(t,i,SSP,RCP) = 0;
@@ -139,7 +145,7 @@ GREM_res(t,SSP,RCP) = 0;
 Np_res(t,i,SSP,RCP) = 0;
 
 
-nonnegative variables
+variables
 
          Np(t,i)    Cumulative production of fossil fuel I
          EM(t)      Carbon emissions
@@ -152,29 +158,30 @@ variable
 equations
 
          PEQ             Production equation
-         PGRRATEEQ       Maximum growth rate costraint for production
+*         PGRRATEEQ       Maximum growth rate costraint for production
          CUMPEQ          Cumulative production equation
          PCOSTR          Geometrical progression constraint on avaliable resources
          EMEQ            Emission equations
          CUMEMEQ         Cumulative emission equations ;
 
 
-peq(t)$(D(t) gt 0)..                                             sum(i,P(t,i)) =E=   1;
-pgrrateeq(t+1,i)$(D(t+1) gt 0)..                                 P(t+1,i)      =G=   maxfs(i)*P(t,i);
-cumpeq(t+1,i)..                                                  Np(t+1,i)     =E=   Np(t,i) + D(t)*P(t,i);
+peq(t)$(D(t) gt 0)..                                             sum(i,P(t,i)) =G=   1;
+*pgrrateeq(t+1,i)$(D(t+1) gt 0 and ord(t) gt 1)..                 P(t+1,i)      =G=   maxfs(i)*P(t,i);
+cumpeq(t+1,i)..                                                  Np(t+1,i)     =E=   Np(t,i) + tstep*D(t)*P(t,i);
 pcostr(t,i)$(ord(t) gt 1)..                                      D(t)*P(t,i)   =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) );
 emeq(t)..                                                        EM(t)         =E=   sum(i,P(t,i) * EMFAC(i));
-CUMEMEQ..                                                        CUMEM         =E=   CUMEM0 + sum(t,EM(t));
+CUMEMEQ..                                                        CUMEM         =E=   CUMEM0 + sum(t,D(t)*EM(t));
 
 
 *set boundaries for stability
 P.lo(t,i)=0;
 P.up(t,i)=1;
 Np.lo(t,i)=Np0(i);
-Np.up(t,i)=K(i);
+*Np.up(t,i)=K(i);
 
 
 model peakoil /all/;
+*peakoil.scaleopt = 1;
 
 
 *running model through scenarios
@@ -191,7 +198,7 @@ loop ( (SSP,RCP),
 *"suggest" production equal to zero if demand is zero to avoid "free production" at zero demand
          P.l(t,i)$(D(t) eq 0) =0;
 *Force dummy at zero in first periods
-*         P.fx(t,"dummy")$(ord(t) le 5) = 0;
+*         P.fx(t,"dummy")$(ord(t) le 8) = 0;
 
 
 options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
@@ -199,7 +206,8 @@ options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
          P_res(t,i,SSP,RCP) = P.l(t,i);
          EM_res(t,SSP,RCP) = EM.l(t);
          D_res(t,SSP,RCP) = D(t);
-         Np_res(t,i,SSP,RCP) = Np.l(t,i); 
+         Np_res(t,i,SSP,RCP) = Np.l(t,i);
+         PD_res(t,i,SSP,RCP) = P.l(t,i)*D(t);
       );
 
 *post processing for correct results if dummy is actively used
@@ -217,5 +225,5 @@ loop ( (t,SSP,RCP),
       );
 
 execute_unload "results.gdx";
-execute_unload "resultsshort.gdx",P_res,EM_res,D_res,Np_res,GREM_res;
+execute_unload "resultsshort.gdx",P_res,EM_res,D_res,Np_res,GREM_res,PD_res;
 execute '=gdx2xls resultsshort.gdx';
