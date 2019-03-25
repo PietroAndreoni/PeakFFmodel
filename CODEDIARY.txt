@@ -13,3 +13,33 @@ Solution 1: discretize at tstep = 1
 Solution 2: ?
 
 - maybe Pcostr condition should be related to gross demand instead of production mix. Think well about the conditions 
+
+ALL PREVIOYS SOLVED
+
+Paper, todo and structure
+
+1) intro
+- SSPs
+- hubbert peak
+- drivers and indicators for future fossil fuel demand: POP, GDP, CI, EI
+
+2) metodology
+- assumptions: no CCS, all CC is due to C02, all C02 is due to fossil fuels
+- exogenous demand
+- demand driven consumption of oil&gas
+- two policy scenarios (maybe add 1.5°C?)
+- dummy variable: use, model, type
+- post solve operations
+
+3) results
+- major trend consistent through scenarios:
+1) in RCP26, coal out and almost all of Oil&Gas proven resources used
+2) in BAUs, major shortages after mid century (and sometimes after 2030)
+- total emission consistent with target in RCP26?
+- what happens if we use just coal to do RCP26?
+- sensitivity analysis: r value, K(i) value - in particular for oil&gas
+- Additional scenarios "major discoveries" or "major tech improvement" in oil&gas reservoir: confront cumem with standard RCP26 scenarios
+
+
+
+

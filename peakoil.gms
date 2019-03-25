@@ -69,6 +69,8 @@ set        RCP   Radiative forcing scenario                       /BAU,RCP26/;
 
 set        i     Fossil fuels                            /coal,oil,gas,dummy/;
 
+set        sens  Sensitivity set                                      / 1*10/;
+
 set        tfirst(t);
 
 tfirst(t) = yes$(t.val eq 2010);
@@ -85,12 +87,6 @@ parameters
                                                                             gas    3292351
                                                                             dummy  10000000000 /
 
-$ontext
-                                                                          / coal   6908219.983
-                                                                            oil    2779569.993
-                                                                            gas    2407409.994
-                                                                            dummy  10000000000 /
-$offtext
          EMFAC(i)           Emission factor by fossil source in MtC02 over TWh
                                                                           / coal  35.728
                                                                             oil   25.799
@@ -136,6 +132,13 @@ scalar
 *support parameters for scenario looping and results saving
 parameter
          P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP), D_res(t,SSP,RCP), PD_res(t,i,SSP,RCP), GREM_res(t,SSP,RCP), Np_res(t,i,SSP,RCP);
+
+*support parameters for sensitivity
+parameter
+         m(sens)    Multiplicative factor for sensitivity analysis;
+
+parameter
+         PD_sens(t,i,RCP,sens), GREM_sens(t,RCP,sens), Np_sens(t,i,RCP,sens), CUMEM_sens(RCP,sens), CUMEMdummy_sens(RCP,sens);
 
 *initialization of support parameters
 P_res(t,i,SSP,RCP) = 0;
@@ -183,7 +186,7 @@ Np.lo(t,i)=Np0(i);
 model peakoil /all/;
 *peakoil.scaleopt = 1;
 
-
+$ontext
 *running model through scenarios
 loop ( (SSP,RCP),
 
@@ -227,3 +230,40 @@ loop ( (t,SSP,RCP),
 execute_unload "results.gdx";
 execute_unload "resultsshort.gdx",P_res,EM_res,D_res,Np_res,GREM_res,PD_res;
 execute '=gdx2xls resultsshort.gdx';
+$offtext
+
+*sensitivity analysis for r
+*for sensistivity, we use middle of the road pathway SSP2
+m(sens) = sens.val/5;
+
+loop ( (sens,RCP),
+
+          D(t) = 0;
+          D(t) = (3.68*CIGDP(t,"SSP2",RCP) * GDP(t,"SSP2",RCP)) $ (CIGDP(t,"SSP2",RCP) gt 0);
+
+          P.fx(tfirst,i) = P0(i);
+          Np.fx(tfirst,i) = Np0(i);
+          P.l(t,i)$(D(t) eq 0) =0;
+
+          K(i)$( not sameas(i,"dummy") ) = m(sens)*K(i);
+
+options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
+
+          PD_sens(t,i,RCP,sens) = D(t)*P.l(t,i);
+          GREM_sens(t,RCP,sens) = D(t)*EM.l(t);
+          Np_sens(t,i,RCP,sens) = Np.l(t,i);
+          CUMEMdummy_sens(RCP,sens) = CUMEM.l;
+          CUMEM_sens(RCP,sens)  = CUMEM.l - sum(t,D(t)*P.l(t,"dummy")*EMFAC("dummy"));
+
+);
+
+execute_unload "sens.gdx",CUMEM_sens,CUMEMdummy_sens,PD_sens,GREM_sens,Np_sens;
+execute '=gdx2xls sens.gdx';
+
+*sensitivity analysis for k(i)
+*scenarios with consistent new discoveries and/or significant improvement in technologies
+
+
+
+
+
