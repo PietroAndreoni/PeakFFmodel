@@ -40,6 +40,10 @@ Paper, todo and structure
 - sensitivity analysis: r value, K(i) value - in particular for oil&gas
 - Additional scenarios "major discoveries" or "major tech improvement" in oil&gas reservoir: confront cumem with standard RCP26 scenarios
 
+OTHER FEATURES/SCENARIOS
+- IEA scenario for proven reserves (now is BP)
+- MAJOR DISCOVERY SCENARIO at a certain time t ne t0 
+- RCP19 SCENARIO
 
 
 

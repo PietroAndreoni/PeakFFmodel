@@ -378,22 +378,68 @@ Order=2,3,1
 Decim=7
 PlaneRownr=-1
 
+[GDXDISP: CUMEM_sens Par 2]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: CUMEMdummy_sens Par 2]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: GREM_sens Par 3]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+SqTrail0=0
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: PD_sens Par 4]
+PlaneDim=0
+RowDim=3
+Squeeze=1
+SqTrail0=0
+Order=1,2,3,4
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: Np_sens Par 4]
+PlaneDim=0
+RowDim=4
+Squeeze=1
+SqTrail0=0
+Order=1,2,3,4
+Decim=7
+PlaneRownr=-1
+
 [RP:PEAKOIL]
 1=
 
 [MRUFILES]
-1=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
-2=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
-3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.lst
-4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.log
+1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\resultsshort.gdx
+2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\results.gdx
+3=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
+4=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
+5=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.lst
+6=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.log
 
 [OPENWINDOW_1]
 FILE0=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.gms
 FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
 FILE2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.lst
-FILE3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\results.gdx
-FILE4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\resultsshort.gdx
-FILE5=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
+FILE3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\sens.gdx
+FILE4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
 MAXIM=0
 TOP=-3
 LEFT=109

@@ -82,52 +82,54 @@ scalar     tstep   Years per period                                        /10/;
 
 parameters
          K(i)               Maximum recoverable resources by fossil source
-                                                                          / coal   8079577
-                                                                            oil    4432166
-                                                                            gas    3292351
-                                                                            dummy  10000000000 /
+                                                           / coal   8079577
+                                                             oil    4432166
+                                                             gas    3292351
+                                                             dummy  10000000000 /
 
          EMFAC(i)           Emission factor by fossil source in MtC02 over TWh
-                                                                          / coal  35.728
-                                                                            oil   25.799
-                                                                            gas   18.108
-                                                                            dummy 50  /
+                                                           / coal  0.35728
+                                                             oil   0.25799
+                                                             gas   0.18108
+                                                             dummy 50 /
 
          r(i)               Maximum growth rate of production by fossil source
-                                                                          / coal  0.052
-                                                                            oil   0.051
-                                                                            gas   0.06
-                                                                            dummy 1 /
+                                                           / coal  0.052
+                                                             oil   0.051
+                                                             gas   0.06
+                                                             dummy 1 /
 
          maxfs(i)           Maximum fuel switching velocity in a period
-                                                                          / coal  0.1
-                                                                            oil   0.5
-                                                                            gas   0.3
-                                                                            dummy 1 / ;
+                                                           / coal  0.1
+                                                             oil   0.5
+                                                             gas   0.3
+                                                             dummy 1 / ;
 *initial values for the variables
 
 parameters
          P0(i)      Production at time t0 of fossil fuel i in relative terms
-                                                                         / coal  0.34
-                                                                           oil   0.39
-                                                                           gas   0.27
-                                                                           dummy 0 /
+                                                           / coal  0.34
+                                                             oil   0.39
+                                                             gas   0.27
+                                                             dummy 0 /
+
          Np0(i)     Cumulative production at time t0 (from 1960)
-                                                                         / coal  1171358.577
-                                                                           oil   1652597.944
-                                                                           gas   882942.0745
-                                                                           dummy 10000000 / ;
+                                                           / coal  1171358
+                                                             oil   1652597
+                                                             gas   882942
+                                                             dummy 10000000/ ;
 
 parameter
          D(t)       Demand of fossil fuels through scenarios;
 
 scalars
-         CUMEM0     Cumulative emission at period t0 (from 1960) relative to total demand at t0
-                                                                        / 991306 /;
+         CUMEM0     Cumulative emission at period t0
+                                                           / 1333178 /;
 
 *targets and parameters for confrontations
 scalar
-         tar        Cumulative emission target by policy scenario        /1000/;
+         tar        Cumulative emission target for RCP26
+                                                           / 2333178 /;
 
 *support parameters for scenario looping and results saving
 parameter
@@ -173,20 +175,19 @@ peq(t)$(D(t) gt 0)..                                             sum(i,P(t,i)) =
 cumpeq(t+1,i)..                                                  Np(t+1,i)     =E=   Np(t,i) + tstep*D(t)*P(t,i);
 pcostr(t,i)$(ord(t) gt 1)..                                      D(t)*P(t,i)   =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) );
 emeq(t)..                                                        EM(t)         =E=   sum(i,P(t,i) * EMFAC(i));
-CUMEMEQ..                                                        CUMEM         =E=   CUMEM0 + sum(t,D(t)*EM(t));
+CUMEMEQ..                                                        CUMEM         =E=   CUMEM0 + sum(t,tstep*D(t)*EM(t));
 
 
 *set boundaries for stability
 P.lo(t,i)=0;
 P.up(t,i)=1;
 Np.lo(t,i)=Np0(i);
-*Np.up(t,i)=K(i);
 
 
 model peakoil /all/;
 *peakoil.scaleopt = 1;
 
-$ontext
+
 *running model through scenarios
 loop ( (SSP,RCP),
 
@@ -224,14 +225,14 @@ loop ( (t,SSP,RCP),
              );
 
          Np_res(t,"dummy",SSP,RCP) = Np_res(t,"dummy",SSP,RCP)-Np0("dummy");
-         GREM_res(t,SSP,RCP) =  EM_res(t,SSP,RCP)*D_res(t,SSP,RCP);
+         GREM_res(t,SSP,RCP) =  tstep*EM_res(t,SSP,RCP)*D_res(t,SSP,RCP);
       );
 
 execute_unload "results.gdx";
 execute_unload "resultsshort.gdx",P_res,EM_res,D_res,Np_res,GREM_res,PD_res;
 execute '=gdx2xls resultsshort.gdx';
-$offtext
 
+$ontext
 *sensitivity analysis for r
 *for sensistivity, we use middle of the road pathway SSP2
 m(sens) = sens.val/5;
@@ -245,7 +246,7 @@ loop ( (sens,RCP),
           Np.fx(tfirst,i) = Np0(i);
           P.l(t,i)$(D(t) eq 0) =0;
 
-          K(i)$( not sameas(i,"dummy") ) = m(sens)*K(i);
+          r(i)$( not sameas(i,"dummy") ) = m(sens)*r(i);
 
 options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
 
@@ -259,10 +260,7 @@ options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
 
 execute_unload "sens.gdx",CUMEM_sens,CUMEMdummy_sens,PD_sens,GREM_sens,Np_sens;
 execute '=gdx2xls sens.gdx';
-
-*sensitivity analysis for k(i)
-*scenarios with consistent new discoveries and/or significant improvement in technologies
-
+$offtext
 
 
 
