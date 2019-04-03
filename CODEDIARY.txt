@@ -45,5 +45,28 @@ OTHER FEATURES/SCENARIOS
 - MAJOR DISCOVERY SCENARIO at a certain time t ne t0 
 - RCP19 SCENARIO
 
+cut/copy of old TODOs
+PROBLEMS E TODO
+- set initial values for the system  DONE
+- set lower and upper boundaries to stability
+- create tables and data for multidimensional parameters  DONE
+- decide and add some parameters (K, r e maxfs)
+- increase robustness: what happens if FF cannot meet the demand?
+- sensitivity analysis: what happens if K(i) rises?
+(- introducing price as a variable and endogenizing non fossil substitutes)
+- Add a small climate model to translate cumulative emissions as concentrations
+- Hubbert geometric model does apply to coal?
+- make a confrontation between historical production and theoretical Hubbert maximum
+production to see if different fossil fuels are or not demand driven
+- introduce a "dummy variable" modelled as a fourth FF with very high emission intensity,
+whose production start to zero. This way, if with a very low reserve scenario FF
+cannot meet the demand, model is still feasibile, even if results must be manipulated
+to remain meaningful.
+- IMPORTANT: correct parameter FFIGDP which is now actually CIGDP (even if they are good proxy)
+- in the paper: search dependence of oil consumptio vs population and vs GDP to show
+that the second is stronger
+- GAMS GENERAL KNOWLEDGE: is referring the equation to (t+1) the same as (ord(t) le card(t)-1)?
+- Think about first condition in pggrateeq
+
 
 

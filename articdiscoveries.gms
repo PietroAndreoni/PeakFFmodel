@@ -54,14 +54,22 @@ tfirst(t) = yes$(t.val eq 2010);
 *multidimensional parameters
 $include Datatables
 
-scalar     tstep   Years per period                                        /10/;
+scalar     tstep   Years per period                                        /10/
+           tdisc   Time of new major discovery                           /2050/;
 
 parameters
-         K(i)               Maximum recoverable resources by fossil source
-                                                           / coal   8079577
-                                                             oil    4432166
-                                                             gas    3292351
-                                                             dummy  10000000000 /
+         K(t,i)             Maximum recoverable resources by fossil source
+
+         k0(i)              Initial proven reserves
+                                                           / coal  8079577
+                                                             oil   4432166
+                                                             gas   3292351
+                                                             dummy 10000000000 /
+         dK(i)              Amount of new discoveries
+                                                           / coal  0
+                                                             oil   2000000
+                                                             gas   2000000
+                                                             dummy 0 /
 
          EMFAC(i)           Emission factor by fossil source in MtC02 over TWh
                                                            / coal  0.35728
@@ -111,6 +119,13 @@ scalar
 parameter
          P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP), D_res(t,SSP,RCP), PD_res(t,i,SSP,RCP), GREM_res(t,SSP,RCP), Np_res(t,i,SSP,RCP);
 
+*support parameters for sensitivity
+parameter
+         m(sens)    Multiplicative factor for sensitivity analysis;
+
+parameter
+         PD_sens(t,i,RCP,sens), GREM_sens(t,RCP,sens), Np_sens(t,i,RCP,sens), CUMEM_sens(RCP,sens), CUMEMdummy_sens(RCP,sens);
+
 *initialization of support parameters
 P_res(t,i,SSP,RCP) = 0;
 EM_res(t,SSP,RCP) = 0;
@@ -140,7 +155,7 @@ equations
 
 peq(t)$(D(t) gt 0)..                                             sum(i,P(t,i)) =G=   1;
 cumpeq(t+1,i)..                                                  Np(t+1,i)     =E=   Np(t,i) + tstep*D(t)*P(t,i);
-pcostr(t,i)$(ord(t) gt 1)..                                      D(t)*P(t,i)   =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(i) );
+pcostr(t,i)$(ord(t) gt 1)..                                      D(t)*P(t,i)   =L=   r(i) * Np(t,i) * ( 1 - Np(t,i)/K(t,i) );
 emeq(t)..                                                        EM(t)         =E=   sum(i,P(t,i) * EMFAC(i));
 CUMEMEQ..                                                        CUMEM         =E=   CUMEM0 + sum(t,tstep*D(t)*EM(t));
 
@@ -160,6 +175,9 @@ loop ( (SSP,RCP),
 
          D(t) = 0;
          D(t) = (3.68*CIGDP(t,SSP,RCP) * GDP(t,SSP,RCP)) $ (CIGDP(t,SSP,RCP) gt 0);
+
+         K(t,i) = k0(i) + dK(i)$(t.val ge tdisc);
+
 *3.68 is a scaling factor based on t0 data that gives the relationship between carbon intensity and FFIofGDP
 *the trend is assumed to be the same (hypothesis supported by past data)
 
@@ -195,8 +213,6 @@ loop ( (t,SSP,RCP),
          GREM_res(t,SSP,RCP) =  tstep*EM_res(t,SSP,RCP)*D_res(t,SSP,RCP);
       );
 
-execute_unload "resultsshort.gdx",P_res,EM_res,D_res,Np_res,GREM_res,PD_res;
-execute '=gdx2xls resultsshort.gdx';
-
-
-
+execute_unload "results.gdx";
+execute_unload "resultsartic.gdx",P_res,EM_res,D_res,Np_res,GREM_res,PD_res;
+execute '=gdx2xls resultsartic.gdx';

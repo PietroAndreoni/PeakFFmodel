@@ -3,6 +3,7 @@
 *.lxi
 *.lst
 *.~gm
+*.gdx
 
 # Office file
 *.doc

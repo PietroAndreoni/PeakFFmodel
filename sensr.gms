@@ -111,6 +111,13 @@ scalar
 parameter
          P_res(t,i,SSP,RCP), EM_res(t,SSP,RCP), D_res(t,SSP,RCP), PD_res(t,i,SSP,RCP), GREM_res(t,SSP,RCP), Np_res(t,i,SSP,RCP);
 
+*support parameters for sensitivity
+parameter
+         m(sens)    Multiplicative factor for sensitivity analysis;
+
+parameter
+         PD_sens(t,i,RCP,sens), GREM_sens(t,RCP,sens), Np_sens(t,i,RCP,sens), CUMEM_sens(RCP,sens), CUMEMdummy_sens(RCP,sens);
+
 *initialization of support parameters
 P_res(t,i,SSP,RCP) = 0;
 EM_res(t,SSP,RCP) = 0;
@@ -154,49 +161,30 @@ Np.lo(t,i)=Np0(i);
 model peakoil /all/;
 *peakoil.scaleopt = 1;
 
+*sensitivity analysis for r
+*for sensistivity, we use middle of the road pathway SSP2
+m(sens) = sens.val/5;
 
-*running model through scenarios
-loop ( (SSP,RCP),
+loop ( (sens,RCP),
 
-         D(t) = 0;
-         D(t) = (3.68*CIGDP(t,SSP,RCP) * GDP(t,SSP,RCP)) $ (CIGDP(t,SSP,RCP) gt 0);
-*3.68 is a scaling factor based on t0 data that gives the relationship between carbon intensity and FFIofGDP
-*the trend is assumed to be the same (hypothesis supported by past data)
+          D(t) = 0;
+          D(t) = (3.68*CIGDP(t,"SSP2",RCP) * GDP(t,"SSP2",RCP)) $ (CIGDP(t,"SSP2",RCP) gt 0);
 
-*set initial values
-         P.fx(tfirst,i) = P0(i);
-         Np.fx(tfirst,i) = Np0(i);
-*"suggest" production equal to zero if demand is zero to avoid "free production" at zero demand
-         P.l(t,i)$(D(t) eq 0) =0;
-*Force dummy at zero in first periods
-*         P.fx(t,"dummy")$(ord(t) le 8) = 0;
+          P.fx(tfirst,i) = P0(i);
+          Np.fx(tfirst,i) = Np0(i);
+          P.l(t,i)$(D(t) eq 0) =0;
 
+          r(i)$( not sameas(i,"dummy") ) = m(sens)*r(i);
 
 options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
 
-         P_res(t,i,SSP,RCP) = P.l(t,i);
-         EM_res(t,SSP,RCP) = EM.l(t);
-         D_res(t,SSP,RCP) = D(t);
-         Np_res(t,i,SSP,RCP) = Np.l(t,i);
-         PD_res(t,i,SSP,RCP) = P.l(t,i)*D(t);
-      );
+          PD_sens(t,i,RCP,sens) = D(t)*P.l(t,i);
+          GREM_sens(t,RCP,sens) = D(t)*EM.l(t);
+          Np_sens(t,i,RCP,sens) = Np.l(t,i);
+          CUMEMdummy_sens(RCP,sens) = CUMEM.l;
+          CUMEM_sens(RCP,sens)  = CUMEM.l - sum(t,D(t)*P.l(t,"dummy")*EMFAC("dummy"));
 
-*post processing for correct results if dummy is actively used
+);
 
-loop ( (t,SSP,RCP),
-
-         if ( P_res(t,"dummy",SSP,RCP) gt 0,
-
-                 EM_res(t,SSP,RCP) = EM_res(t,SSP,RCP) - EMFAC("dummy")*P_res(t,"dummy",SSP,RCP);
-
-             );
-
-         Np_res(t,"dummy",SSP,RCP) = Np_res(t,"dummy",SSP,RCP)-Np0("dummy");
-         GREM_res(t,SSP,RCP) =  tstep*EM_res(t,SSP,RCP)*D_res(t,SSP,RCP);
-      );
-
-execute_unload "resultsshort.gdx",P_res,EM_res,D_res,Np_res,GREM_res,PD_res;
-execute '=gdx2xls resultsshort.gdx';
-
-
-
+execute_unload "sensr.gdx",CUMEM_sens,CUMEMdummy_sens,PD_sens,GREM_sens,Np_sens;
+execute '=gdx2xls sensr.gdx';
