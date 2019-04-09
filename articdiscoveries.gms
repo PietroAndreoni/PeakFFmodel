@@ -55,7 +55,7 @@ tfirst(t) = yes$(t.val eq 2010);
 $include Datatables
 
 scalar     tstep   Years per period                                        /10/
-           tdisc   Time of new major discovery                           /2050/;
+           tdisc   Time of new major discovery                           /2030/;
 
 parameters
          K(t,i)             Maximum recoverable resources by fossil source
@@ -65,10 +65,10 @@ parameters
                                                              oil   4432166
                                                              gas   3292351
                                                              dummy 10000000000 /
-         dK(i)              Amount of new discoveries
+         dK(i)              Amount of new discoveries (as percentage of initial)
                                                            / coal  0
-                                                             oil   2000000
-                                                             gas   2000000
+                                                             oil   0.06
+                                                             gas   0.24
                                                              dummy 0 /
 
          EMFAC(i)           Emission factor by fossil source in MtC02 over TWh
@@ -176,7 +176,7 @@ loop ( (SSP,RCP),
          D(t) = 0;
          D(t) = (3.68*CIGDP(t,SSP,RCP) * GDP(t,SSP,RCP)) $ (CIGDP(t,SSP,RCP) gt 0);
 
-         K(t,i) = k0(i) + dK(i)$(t.val ge tdisc);
+         K(t,i) = k0(i)*(1 + dK(i)$(t.val ge tdisc) );
 
 *3.68 is a scaling factor based on t0 data that gives the relationship between carbon intensity and FFIofGDP
 *the trend is assumed to be the same (hypothesis supported by past data)

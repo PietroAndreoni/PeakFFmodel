@@ -1,8 +1,5 @@
 [PROJECT]
 
-[RP:UNTITLED_1]
-1=
-
 [RP:POPTABLES]
 1=
 
@@ -357,9 +354,6 @@ Order=2,3,4,1
 Decim=7
 PlaneRownr=-1
 
-[RP:DATATABLES]
-1=
-
 [GDXDISP: PD_res Par 4]
 PlaneDim=0
 RowDim=3
@@ -423,25 +417,60 @@ Order=1,2,3,4
 Decim=7
 PlaneRownr=-1
 
+[RP:UNTITLED_1]
+1=
+
+[RP:DATATABLES]
+1=
+
+[GDXDISP: r_sens Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: r_sens Par 2]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+SqTrail0=0
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[RP:SENSR]
+1=
+
+[RP:ARTICDISCOVERIES]
+1=
+
 [RP:PEAKOIL]
 1=
 
 [MRUFILES]
 1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\resultsshort.gdx
-2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\results.gdx
-3=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
-4=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
-5=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.lst
-6=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.log
+2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Untitled_1.gms
+3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\sens.gdx
+4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\results.gdx
+5=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\solve_regions.gms
+6=C:\Users\pietr\Documents\NeconlostatoneconleBL-codice\DICE2013_NS.gms
 
 [OPENWINDOW_1]
-FILE0=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.gms
-FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
-FILE2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.lst
-FILE3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\sens.gdx
-FILE4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
+FILE0=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\articdiscoveries.gms
+FILE1=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\articdiscoveries.lst
+FILE2=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\Datatables.gms
+FILE3=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
+FILE4=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.lst
+FILE5=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\resultsartic.gdx
+FILE6=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\sensr.gdx
+FILE7=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\sensr.gms
+FILE8=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\sensr.lst
+FILE9=C:\Users\pietr\Desktop\Oil&gas\Progetto\PeakFFmodel\peakoil.gms
 MAXIM=0
-TOP=-3
-LEFT=109
+TOP=18
+LEFT=81
 HEIGHT=756
 WIDTH=1032

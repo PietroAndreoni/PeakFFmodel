@@ -170,6 +170,8 @@ loop ( (SSP,RCP),
          P.l(t,i)$(D(t) eq 0) =0;
 *Force dummy at zero in first periods
 *         P.fx(t,"dummy")$(ord(t) le 8) = 0;
+*Force coal at zero after 2050 for RCP scenarios
+         P.fx(t,"coal")$(t.val ge 2050 and RCP.val eq "RCP26") = 0;
 
 
 options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;

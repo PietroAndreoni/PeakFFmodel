@@ -55,6 +55,21 @@ tfirst(t) = yes$(t.val eq 2010);
 $include Datatables
 
 scalar     tstep   Years per period                                        /10/;
+$ontext
+parameter m(sens)
+/
+1  0.2
+2  0.4
+3  0.6
+4  0.8
+5   1
+6  1.2
+7  1.4
+8  1.6
+9  1.8
+10  2
+/ ;
+$offtext
 
 parameters
          K(i)               Maximum recoverable resources by fossil source
@@ -69,7 +84,7 @@ parameters
                                                              gas   0.18108
                                                              dummy 1 /
 
-         r(i)               Maximum growth rate of production by fossil source
+         r0(i)              Maximum growth rate of production by fossil source
                                                            / coal  0.061
                                                              oil   0.06
                                                              gas   0.07
@@ -96,7 +111,8 @@ parameters
                                                              dummy 10000000/ ;
 
 parameter
-         D(t)       Demand of fossil fuels through scenarios;
+         D(t)       Demand of fossil fuels through scenarios
+         r(i) ;
 
 scalars
          CUMEM0     Cumulative emission at period t0
@@ -116,7 +132,7 @@ parameter
          m(sens)    Multiplicative factor for sensitivity analysis;
 
 parameter
-         PD_sens(t,i,RCP,sens), GREM_sens(t,RCP,sens), Np_sens(t,i,RCP,sens), CUMEM_sens(RCP,sens), CUMEMdummy_sens(RCP,sens);
+         PD_sens(t,i,RCP,sens), GREM_sens(t,RCP,sens), Np_sens(t,i,RCP,sens), CUMEM_sens(RCP,sens), CUMEMdummy_sens(RCP,sens), r_sens(i,sens);
 
 *initialization of support parameters
 P_res(t,i,SSP,RCP) = 0;
@@ -174,7 +190,7 @@ loop ( (sens,RCP),
           Np.fx(tfirst,i) = Np0(i);
           P.l(t,i)$(D(t) eq 0) =0;
 
-          r(i)$( not sameas(i,"dummy") ) = m(sens)*r(i);
+          r(i)$( not sameas(i,"dummy") ) = m(sens)*r0(i);
 
 options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
 
@@ -183,8 +199,8 @@ options nlp=conopt4; solve peakoil minimizing CUMEM using nlp;
           Np_sens(t,i,RCP,sens) = Np.l(t,i);
           CUMEMdummy_sens(RCP,sens) = CUMEM.l;
           CUMEM_sens(RCP,sens)  = CUMEM.l - sum(t,D(t)*P.l(t,"dummy")*EMFAC("dummy"));
-
+          r_sens(i,sens) = r(i);
 );
 
-execute_unload "sensr.gdx",CUMEM_sens,CUMEMdummy_sens,PD_sens,GREM_sens,Np_sens;
+execute_unload "sensr.gdx",CUMEM_sens,CUMEMdummy_sens,PD_sens,GREM_sens,Np_sens,r_sens;
 execute '=gdx2xls sensr.gdx';

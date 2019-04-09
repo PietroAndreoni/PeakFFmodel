@@ -1,0 +1,321 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+\usepackage[T1]{fontenc}
+
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+\usepackage{textcomp} %allow to use euro symbol
+\usepackage[gen]{eurosym} %idem
+\usepackage{amsmath}
+\usepackage{textcomp}
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{Fossil fuels, climate change and scenarios: a simple model}
+\author{Pietro Andreoni}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper present a simple model developed in GAMS to assess the role of known reservoir of fossil fuels and production peak in meeting future demand projected throught different scenarios. In particular, two policy scenario were model for each Shared Socioeconomic Pathway: a Business As Usual policy scenario and one in compliance with Paris goals of 2°C in temperature increase with respect to pre-industrial era. Maximum production capacity for each fossil fuel considered - namely coal, oil and natural gas - is assumed to be costrained by the Hubbert curve. 
+The model minimize emissions throught time given the costraint of meeting the exogenous demand. Results show a massive shortage of fossil fuels by mid century in most BAU scenario and, for high mitigation scenarios, an almost complete depletion of proven reserves of oil and gas, while coal remains largely in the ground.
+\end{abstract}
+
+\tableofcontents
+
+\pagebreak
+
+\section{Introduction} \label{intro}
+
+Tight relationship between fossil fuels burning for human economic activities, carbon dioxide emissions and observed mean temperature increase from pre industrial era is nowaday a widely accepted fact in scientific community. The threat posed by dramatic and possibly irreversible impacts of unmitigated climate change has brought the international community to commit in limiting the temperature increase "well below 2°C". However, the proportion of the economical, technical and political trasformations required to meet this goal is huge and the path to be taken, while in some extent clear in his direction, is far from being unanimusly followed. In this uncertain picture, the debate with respect to fossil fuel and decarbonization in some occasion switched from a tecno-political discussion on proper times and ways to deal with the necessary green transition to a more ideological led contrapposition between the fossil fuel industry on one side and the general public on the other. \par This situation, exacerbated by extensive political lobbying by FF industry in key producing and consuming countries like the US and often by financing and supporting climate change denialism campaigns to the general public, may lead to delays and non cooperative behaviour in the productive and civic tissue of the countries, with terrible consequences in tackling the most dangerous single threat humanity is facing and will face during the course of the century. As, on the contrary, effective climate change mitigation requires extensive cooperation not only between countries but also within them, developing a narrative that leads to strong engagement of all the stakeholders to tackle the common issue is in order. 
+\par This paper aims to help providing this narrative by assessing some key points about fossil fuels and climate change in a simple, "stand alone" model enviroment, thus conveing in a single framework some important results which are already known in the literature but can be often overshadowed by other issues.
+In order to do so, projections are needed for both socio-economics trends and decarbonization trajectories compatible with a certain climate policy target. In the next section we briefly review the instrument used to obtain this projections. These projections will allow us to obtain forecasts for future fossil fuel demand. Afterwards, in sections \ref{hubpeak} and \ref{demand}, we adress the other main issue related to fossil fuel consumption: their intrinsic non renewability and thus the great relevance of accurate estimates for reserves and geological constraint on production rates. Moreover, we briefly review the relationship between demand and fossil fuel production.
+
+\subsection{The shared socioeconomic pathways and policy targets} \label {SSPandRCP} 
+
+The need to explore and understand the intricate interconnections between both human and non human system and within human system themselves in order to come up with reliable policy measures to tackle climate change has brought the climate change related scientific community to rely heavily on so called Integrated Assessment Models. These models need, like all models, a set of inputs and one or more optimization targets: the first are tipically provided by the shared socioeconomic pathways (from now on SSPs), the second ones are tipically temperature targets, which can be effectively related to concentration (and thus emissions) targets thanks to our understanding of climate science and carbon cycle. \par SSPs are, in fact, five different likely projections of population, wealth and other economic indicators up to 2100, and each one provides a coherent narrative with respect of some key factor, such as equality, international cooperation and strenght of institutions, sustainability of development, technological progress. We provide a brief summary of these assumptions throught the SSPs (for a complete description, see Riahi et al (2017)): 
+
+\begin{itemize}
+\item SSP1 is a world that shift rapidly and with high level of international cooperation towards a sustainable, low consumption led growth and low energy intensity future. Developing countries take a path of rapid and sustainable growth, leading to a demographic shift before mid century. 
+\item SSP3 is a world with high regional challenges, low cooperation and high inequality both between countries and in between them. This leads to high population growth in a very poor south and stagnation in a very old and rich north.
+\item SSP4 rapresents a world with high technological development and with high level of interconnection between countries. However, high inequality within countries leads to a division between a global elite with access to high tecnologies and quality of life and local, underdeveloped masses with access to low level energy and technology
+\item SSP5 is a world where a fossil fuel driven rapid and spread growth of the economy
+\item SSP2 is an in between world, where characteristic mentioned above show contraddicting signes and trends depending on country to country
+\end{itemize}
+
+\par SSPs have also been described (Figure \ref{s11f1}) by the intensity of the challenge they represent with respect of mitigation and adaptation policy: in general, pathways with low cooperation give higher mitigation challenges while high intra-state inequality have higher adaptation challenges. As our model only assess mitigation issues, we expect SSP1 and SSP3 to behave more or less like, respectively, SSP4 and SSP5.
+
+\begin{figure}
+
+\centering
+\includegraphics  [width=.5 \textwidth]{SSPs}
+\caption{SSPs in the mitigation-adaption space}
+\label {s11f1}
+
+\end{figure}
+
+\par Policy targets are, on the other way, often expressed in terms of radiation forcing: most important policy scenarios are those coherent with a radiative forcing of $ 2.6\ \frac{W}{m^2}$ (which corresponds to a 2°C temperature increase) and $ 1.9\ \frac{W}{m^2} $ (compatible with a 1.5°C temperature increase), besides of course a reference no policy scenario (from now on BAU).
+\par Mixing these pathways assumptions with different policy target, SSPs developers and modellers have come up with comprehensive scenarios that provide detailed and quantitative projection of key energy and land use indicators, such as energy mix, energy intensity and emission intensity of GDP, both on a global and regional scale.
+
+\subsection{Geological constraint: the Hubbert peak} \label{hubpeak}
+
+Hubbert semi-empirical model was first proposed in 1962 by the american geologist Marion King Hubbert. Following the empirical and theoretical knowledge about the decline in growth rate of production in a single oil field (due to pressure drop and other chemical-phisical phenomena), Hubbert theorized and predicted that, given a certain amount of proven reserves, total oil production would peak and eventually decline to zero in a bell shaped curved. In Hubbert original analysis, the equation used to fit the historical data was the logistic equation, in which percentage growth rate of production is linearly declining with respect to cumulative production, reaching 0 when cumulative production equals maximum recoverable oil in proven reserves [inserire figura]. In formulas: 
+
+\begin{equation}
+\frac{1}{N_p}\frac{dP}{dN_p} = r(1-\frac{N_p}{K_i})
+\label{s12e1}
+\end{equation}
+
+Where:
+\begin{itemize}
+\item $N_p$ is cumulative production at time t
+\item $P$ is production at time t
+\item $r$ is maximum technical growth rate of production
+\item $K_i$ is maximum recoverable oil in proven reserves
+\end{itemize}
+
+Hubbert consideration predicted with significant precision the peaking of US oil production and its consequent decline in the 70s. However, new discoveries and the improvement of percentage recovery of existing fields, driven by high prices (which Hubbert model completely fails to take into account), led to a new increase of oil production in the late 70s. Moreover, 
+Since than, prediciton of global oil peaking kept shifting forward following new technologies, discoveries or production revolution (such as shale). Attempt were also made to merge some kind of geological constraint consideration (many of which are derivation of Hubbert model) and economic behaviour of oil market [cit]. However, Hubbert model itself is stille extensively used to regional prediction and, while its accuracy its heavily dependend on future uncertainty about proven reserves, it provides a useful insight on the phisical constraint in producing depletable resources. 
+
+\subsection{Market constraint: demand } \label{demand}
+
+As for any commodity in a market-based economy, fossil fuels prices reflect somehow the scarcity of the resource itself. However, fossil fuels markets behave in a very different way accordingly to their extraction, transport and geographical concentration charateristic. In particular: 
+\begin{itemize}
+\item the more a resource is concentrated in some specific region of the world the less the competion in the market; thus, production will be split between a handful of oligopolist and, given the lack of super-national authority capable of enforcing market regulation, cartels are likely to occur.
+\item the more the production cost varies (due to technical reason) from field to field, the higher will be the tentation for low cost opportunity producers to lower cost by fostering production, thus ousting higher cost opportunity producer. This tends to strenghten the above considerations
+\item if the transport of the commodity requires rigid, long term to build and expensive infrastructure, the market will tend to be organized in long term contracts between the supplier and the consumer, thus reducing the volatility of prices and quantity exchanged. Markets will tend to show different dynamics from region to region.
+\item in general, the more the resource is abundand the less the power of the single player of influencing the market
+\item the presence in the market of viable (and sufficiently cheap) substitutes for the resource diminish the power of the producers to freely set quantity and prices
+\end{itemize}
+
+Looking at this brief list, it is clear that coal, oil and natural gas markets should behave very differently: the fuel of the first industrial revolution is abuntant, quite uniformely spread between continent, it's easy to transport and has an almost perfect substitute in natural gas; natural gas, instead, is much more concentrated, less abundant and bound by its transport infrastracture (at least until and if GNL will replace pipelines as main mean of transport for gas); oil is highly concentrated, world wide transportable, and with little or no substitutes for many vital sector of the economy (eg naval and aeral transportation sector). Infact, coal behave essentialy like a demand-driven commodity, which is to say that price and quantity are set according to competitive market forces, while natural gas and oil historical production and price trends can only be understood by looking at the strategic interaction between states, rather than competition between firms. Oil in particular behave like a price driven commody, in the sense that oil producers (the major percentage of which is a member of the OPEC cartel) set the price by deciding the quantity they will produce and demand accomodate accordingly \footnote{not without consequences on the economy, as 1973 oil driven economic crisis shows}.
+
+\begin{figure}
+\subfloat [] [] {\includegraphics [width=.5 \textwidth] {prodvsprice} }
+\subfloat [] [] {\includegraphics [width=.5 \textwidth] {gratevsres} }
+\caption{Historical trend of price, production and proven reserves for oil}
+\label{s13f1}
+\end{figure}
+
+This is quite clear by looking at Figure \ref{s13f1}: in the early '70s, nationalization of gulf oil production companies led to a shift in production philosophy from a more profit driven behaviour, that can be traced in the much steeper growth rate of production decline before the 70s (blue line, Figure \ref{s13f1} (b) ), to a more conservative  approach oriented to mantain gulf countries main strategic asset on a long term prospective; this led to a reduction in production rate decline and a contestual peak of oil prices (orange line, Figure \ref{s13f1} (a) ). It is interesting to notice, thou, that the gross production reduction following the price spikes was not as significant as may be expected: if from 1973 to 1979 prices increased by a factor of 5, production remained more or less costant. The reason for this behaviour is very low elasticity of demand for oil, given that oil was and is still today vital for virtually every sector of economic activity.
+
+\subsection{Proven reserves} \label{prres}
+
+Equation \ref{s12e1} clearly shows a strong dependence on proven reserves estimates: all others parameters constant, the peak of the curve mononically shifts to the right following the increase of proven reserves. Have access to a reliable estimate for global reserves is thus imperative to elaborate meaningful projections about future trends using Hubbert method. However, as Figure \ref{s14f1} clearly show, proven reserves estimates over time have sistematically grown, partially because of new discoveries but mostly due to improvement of average recovery rate or development of new technologies of extraction such as fracking for shale oil.  In order to model this uncertainty about future reserves, various methods based on stochastic variations of hubbert curve have been proposed [cit]. However, after the shale revolution and with recovery rates now approaching 70\% with enhanced oil recovery for many fields, there aren't foreseable technological revolutions on the horizon. 
+
+As for new discoveries, the only known region to host a considerable amount of undiscovered resources is artic. Quite ironically, this fields are to be made operable by polar ice cap melting caused by the burning of fossil fuels. However, high uncertainty remains both on the gross amount of oil and gas in the region and on the economic viability of the fields.
+
+\begin{figure}
+\centering
+\includegraphics [width=.5 \textwidth] {res}
+\caption {Trend of proven reserves over time, as estimated year by year, in Mstb}
+\label {s14f1}
+\end{figure}
+
+
+\section{Methodology} \label{meth}
+
+This model is based on two key assumptions:
+\begin{enumerate}
+\item coal, oil and natural gas are perfect substitutes. As briefly discussed in section \ref{demand}, this is not the case for coal and oil. However, oil and natural gas on one side and natural gas and coal on the other can be considered good substitutes between each other in most vital sector of the economy. 
+\item demand for fossil fuel is to be intended as residual demand, given a certain level of effort in decarbonization. The model simply choose the optimal mix of fossil fuel able to meet the demand while minimizing emissions.
+\item all emissions are assumed to be C02 and deriving from fossil fuel burning. The approssimation is strong, but giving a precise description of greenhouse gas emissions is beyond the scope of the model. The idea here is rather to give an overall rapresentation of main trends in fuel switching and production.
+\item no negative emissions technology is modelled. Thus, fossil fuel consumption and emission are univocally linked. This is especially important because decarbonization trends are derived from IAMs that very often rely on CCS and DAC after mid century, meaning that final cumulative emissions in our model may result in higher values than a tipical 2°C carbon budget (typically around 1000 GtC02eq).
+\end{enumerate}
+Given this assumptions, production of fossil fuel in the model is governed by two core equations: a lower cumulative constraint to meet the exogenous demand, expressed as a mix constraint granting that the sum of all fossil fuel production relative to demand equals 1 (Equation \ref{s2e1}), and an upper constraint for each fossil fuel to be consistent with the hubbert equation, here intended as a geological limit (Equation \ref{s2e2}).
+
+\begin{align}
+&i = \{coal, oil, natural\ gas\}  \\
+&P_i(t) = \frac{P_{i,gross}(t)}{D(t)} \\
+&\sum_{i}{P_i(t)} > 1 \\ \label{s2e1}
+&P_i(t) * D(t) < N_{p,i}(t) * r_i (1 - \frac {Np_i(t)}{K_i} ) \\ \label{s2e2}
+& N_{p,i}(t+1) = N_{p,i}(t) + D(t)*P_i(t)
+\end{align}
+
+Production is then converted to emission via each fossil fuel emission factor and then summed over time into cumulative emissions. Model optimizator then minimize over time cumulative emission, acting as a omniscent planner.
+
+\begin{align}
+& EM_i(t) = EMFAC_i * P_i(t) \\
+& CUMEM = \sum_{t,i} EM_i(t)
+\end{align}
+
+A dummy variable is also included in order to point out possible shortage in overall fossil fuel availability with respect to demand. This support variable is modelled as a fittice fossil fuel with higher specific emissions then the other three and nearly infinite resource availability. If dummy is used in solving the scenario, emissions related are removed in post solve manipulation, as its emission value is totally arbitrary and has no significance whatsoever.
+
+This simple set of equations is composed by twelve variables (production, cumulative production and emissions for all fossil fuels and dummy), one objective variable (cumulative emissions over time) and various parameters: initial values for cumulative emissions, production and cumulative productions, proven reserves and maximum growth rate of production for each fossil fuel and overall demand projections. While decision about the initial values is quite straightforward (see Annex A for sources and data), data for demand and $r_i$ are not immediate to evaluate. 
+In next sections we review the choices we made to evaluate them.
+
+\subsection {Demand and GDP}
+Carbon intensity of gross domestic product is used as a proxy indicator for fossil fuel demand. Thus, demand for all fossil fuels can be written as
+
+\begin{equation}
+D(t) = 3.68*CIGDP(t,SSP,RCP)*GDP(t,SSP,RCP)
+\end{equation}
+
+where $CIGDP$ and $GDP$ are given from integrated assessment model projections and vary throught different pathways and policy scenarios. Factor 3.68 is a scaling factor calibrated using 2010 historical data to express the ratio between fossil fuel intensity of GDP and carbon intensity of GDP. In other words, the factor rapresent the carbon intensity of the energy mix per unit of production, which is actually an endogenous result of the model, variable $EM(t)$. Thus, overall emissions as projected by IAMs could have actually been related endogenously to fossil fuel demand via the emission intensity of fossil fuel mix. However, this would have actually meant a demand endogenization in dependence of the fossil fuel mix itself. While formally correct, such an approach would have been logically and conceptually uncorrect, allowing the model to diminish overall demand (other than emissions) by switching to less intensive fuels. 
+
+In other words, we choose to use carbon intensity of GDP not for its precise meaning but as a proxy of the dependence of the economy from fossil fuels. Thus, simply scaling the indicator as described above in equation \ref{s2e1} gives a sufficiently precise estimate of overall demand, allowing at the same time to keep a simple  model structure. Moreover, analysis of past data in Figure \ref{s2f1} shows that the range of variation for an equilibrate mix is not particularly significant.
+
+\begin{figure}
+\centering
+\includegraphics [width=.5 \textwidth] {ciff}
+\caption {Past trend for carbon intensity to fossil fuel intensity scaling factor}
+\label {s2f1}
+\end{figure}
+
+\subsection{Maximum technical rate of production}
+$r(i)$ value rapresent the maximum technical growth rate possible for that resource. Thus, it is dependent on phisical constraint and technology. Two approaches can be taken into evaluating this parameter: on one hand, it can be derived as a best fit for the logistical equation with past data; on the other, it can be derived by solving Hubbert equation with production and cumulative production past data and choosing the historical maximum. We chose to use this second approach because it better fits the interpretation of the Hubbert curve as a geological upper constraint. 
+
+However, as equation \ref{s2e2} shows,
+
+\begin{equation}
+r_i(t) = \frac {P_i(t)} {N_{p,i}(t)*(1 - \frac{N_{p,i}(t)}{K_i})}
+\label{s2e2}
+\end{equation}
+
+ $r_i$ calculated this way is dependent from each year level of production which, as we saw in Section \ref{demand}, can be dependent on geopolitical rather then technical issues. Thus, in order to avoid falsification due to non technical related issues, we pick the maximum  between 1985 and 2004, after the second oil crisis and before 2005 spike, where prices were relatively stable.
+
+Clearly, this approach is somehow arbitrary, but as we show in section \ref{sensr} results are not sensitive to $r_i$ within a fairly large range of variation.
+
+\section{Results} \label{res} 
+
+Before getting to the earth of results and scenarios discussion, some consequences of the model structure and its assumption need to be stressed for the sake of clarity. Possibly the most important point relates to assumption (2) in Section \ref{meth}: in the model, decarbonization effort (expressed as carbon intensity of GDP) is exogenous. This is to say that fossil fuel availability (or shortage) and its economicity do not provide in any sense a disincentive (incentive) to mitigations effort. This point will prove particularly relevant in section \ref{art}, where result discussion cannot avoid to take into consideration price-scarcity mechanisms.
+
+Another consequence of model structure, and in particular of dummy variable, is that when it's used to solve a scenario results about emissions don't have a rigorous meaning: as explained in section \ref{meth}, dummy  contribution to emissions is removed in post-solve; this means that BAU scenarios will show a downward trend in the second half of the century. However, this behaviour is due to lack of fossil fuel to burn and not to carbon policies or demand reduction. Such results are thus not further discussed in this paper. 
+
+\begin{figure}
+\centering
+\subfloat [] [SSP1-BAU] {\includegraphics [width=.45 \textwidth] {ssp1bau} } 
+\subfloat [] [SSP1-RCP] {\includegraphics [width=.45 \textwidth] {ssp1rcp} }\\
+
+\centering
+\subfloat [] [SSP2-BAU] {\includegraphics [width=.45 \textwidth] {ssp2bau} } 
+\subfloat [] [SSP2-RCP] {\includegraphics [width=.45 \textwidth] {ssp2rcp} }
+
+\centering
+\subfloat [] [SSP3-BAU] { \includegraphics [width=.45 \textwidth] {ssp3bau} } \\
+
+\centering
+\subfloat [] [SSP5-BAU] {\includegraphics [width=.45 \textwidth] {ssp5bau} }
+\subfloat [] [SSP5-RCP] {\includegraphics [width=.45 \textwidth] {ssp5rcp} }
+
+\caption{Results for baseline and Paris mitigation scenarios in various SSPs}
+\label{s3f1}
+\end{figure}
+
+\subsection{BAU and RCP2.6 scenarios} 
+
+
+\begin{figure}
+\centering
+\includegraphics [width=.45 \textwidth] {cumprodfinal} 
+\caption{Total percentage use of fossil fuel resources in RCP2.6 scenarios throu SSPs}
+\label{s32f4}
+\end{figure}
+
+A quick look at Figure \ref{s3f1} give us back some important and consistent results. 
+
+For BAU scenarios, peak in demand never occur or occur very late in the century and maximum value of demand varies significantly throu scenarios, with a maximum of over $400000\ TWh$ for SSP5. All scenarios show a massive shortage of fossil fuel (black area in the graphs) after mid century, given the current state of proven reserves.
+
+For RCP2.6 scenarios, a peak occurs between 2020 and 2030 at a demand level between $120000\ TWh$ and $140000\ TWh$, followed by a rapid decline up to zero emissions between 2050s and 2070s. As for fossil fuel mix, two contraddicting trends can be highlighted: before 2050, we see the phase out of carbon and the increase of natural gas (mostly) and oil shares. However, after mid century, coal reappears in the mix up until carbon neutrality. This apparently strange behaviour reveals a minor shortage of noble fossil fuels after mid century, forcing the model to rely again on coal. Clearly, such a trend in energy mix would be simply unfeasible, just considering investment costs and costruction time of thermal power plants. Such a shortage, if to occurr, would be most likely faced by increasing non carbon technology share.
+
+However, this considerations go beyond the possibility and the scope of this model: what is important to stress out here is that the actual level of proven reserves - at leasts BP estimates, which are notoriusly more conservative than other agencies - implies massive shortages of all fossil fuels in BAU scenarios and minor shortages of noble fossil fuels in RCP2.6 scenarios after mid century.
+
+This statement is consistent with Figure \ref{s32f4}, that shows the percentage of final use of fossil fuels throught scenarios: while only roughly one fifth coal is burnt at 2100, virtually every known reserve of oil and gas is depleted.
+
+In next section we analize what happens if the amount of proven reserves increases.
+
+\subsection{Artic discoveries scenario} \label{art}
+
+We have already discussed in Section \ref{prres} the high uncertainty surrounding proven reserves estimates due to possibility of new discovery and improvement in average recovery factor. In order to account for this uncertainty, we ran an additional scenario in order to assess the effect of increase in noble fossil fuel reserves, using a middle of the road SSP2 pathway. For the sake of argument, we refer to this scenario as artic discoveries and we use likely estimates of artic geological reserves to model the increase in proven reserves: in particular, we assume an increase of 6\% in oil reserves and of 24\% in gas reserves. Clearly, same conceptual results hold even if the narrative is changed to a more recovery efficiency based improvement.
+To assess if results depends on discovery time, we also ran two sub-scenarios that differ from starting production time. 
+
+
+
+\begin{figure}
+\centering
+\subfloat [] [baseline resources] {\includegraphics [width=.3 \textwidth] {ssp2rcp} } 
+\subfloat [] [artic discoveries 2030] {\includegraphics [width=.3 \textwidth] {ssp2rcpartic2030} }
+\subfloat [] [artic discoveries 2050] {\includegraphics [width=.3 \textwidth] {ssp2rcpartic} }
+\caption{Production trend for a SSP2-RCP 2.6 scenario with and without artic discoveries}
+\label{s32f1}
+\end{figure}
+
+Taking a look of Figure \ref{s32f1}, we can see that the broader avaliability of gas allows a phase out of coal in 2030s and an almost complete phase out of oil around 2050s. Delaying initial production time has effect on the shape of gas production curve, as in 2030 discoveries scenario gas production reaches a plateau in 2030-2050 before declining with demand, while in 2050 scenario decline of gas production in the 2030s needs to be covered with more oil usage, until new production peak of gas kicks in and oil is almost completely phased out. Graphs \ref{s32f2} and \ref{s32f3}, however, suggest that even if the delay in discovery and first production time changes the shape of the production function, it does not have significant impact on the overall effects in terms of emissions and total usage of resources. SSP5, where demand drop rate is particularly high, makes ecception, because availability of gas after the 2050s cannot compensate for the high oil request in meeting previous demand. 
+
+From the same two graphs a significant drop in total emissions can be noticed from baseline to artic scenarios, meaning that broader availability of oil and mostly gas allows a safer and better transition to a zero emissions economy. 
+Chart \ref{s32f3} also highlights a key point: broader availability of gas results non only in a reduction in coal overall consumption, as espected, but also in a percentually more significant change of used oil reserves, that move from an almost 100\% of resources exploitations in baseline scenario to a little more than 80\% in artic scenarios. 
+
+\begin{figure}
+\centering
+\includegraphics [width=.45 \textwidth] {cumemartic} 
+\caption{Total emissions in RCP2.6 policy scenario throu SSPs with and withour artic discoveries}
+\label{s32f2}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics [width=.45 \textwidth] {resartic}
+\caption{Final burnt reserves as percentage to total in a SSP2-RCP2.6 scenario with and without artic discoveries}
+\label{s32f3}
+\end{figure}
+
+\subsection{Sensitivity analysis: maximum growth rate of production} \label{sensr}
+
+\section{Conclusions}
+
+- increase of gas availability helps ease the transition. For high mitigation intensity scenario, the sooner this gas is available the better. \\
+- virtually all known oil and gas reserves are used in Paris consistent scenarios. However, this scenarios rely on CCS and DAC after mid century, thus emissions from this fossil fuel usage exceed significantly the carbon  budget. \\
+- results are to be taken as a suggestion to assess the very base of the issue related to fossil fuels and fossil fuels availability. As they don't include key factors like behaviour under uncertainty, price-scarcity mechanism, feed-back between fossil fuels trends and energy policy, social and technogical constraints, geopolitical complexity, they are not to be taken as assertive statements. \\
+- BAU scenarios show massive shortages of all fossil fuels after mid century \\
+- further work: 1.5° scenarios  
+
+
+
+\end{document}
